@@ -146,10 +146,13 @@ export async function getPlaylistTracks(
 }
 
 export function transformTrack(spotifyTrack: any): Track {
-  const smallestAlbumImage = spotifyTrack.album.images.reduce(
-    (smallest: any, image: any) => {
-      if (image.height < smallest.height) return image;
-      return smallest;
+  // Select the largest available image for better quality
+  // Spotify provides images in different sizes: typically 64x64, 300x300, 640x640
+  const largestAlbumImage = spotifyTrack.album.images.reduce(
+    (largest: any, image: any) => {
+      if (!largest) return image;
+      if (image.height > largest.height) return image;
+      return largest;
     },
     spotifyTrack.album.images[0]
   );
@@ -160,7 +163,7 @@ export function transformTrack(spotifyTrack: any): Track {
     artist: spotifyTrack.artists[0]?.name || 'Unknown Artist',
     artistId: spotifyTrack.artists[0]?.id,
     uri: spotifyTrack.uri,
-    albumUrl: smallestAlbumImage?.url || '',
+    albumUrl: largestAlbumImage?.url || '',
     albumName: spotifyTrack.album.name,
     duration: spotifyTrack.duration_ms,
   };

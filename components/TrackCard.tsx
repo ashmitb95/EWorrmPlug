@@ -23,8 +23,10 @@ export default function TrackCard({ track, onSelect, isPlaying = false }: TrackC
             src={track.albumUrl}
             alt={track.title}
             fill
+            quality={90}
             className="object-cover transition-transform group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={false}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gray-700">

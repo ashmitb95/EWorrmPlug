@@ -298,6 +298,7 @@ export default function Player({ accessToken }: PlayerProps) {
                   src={currentTrack.albumUrl}
                   alt={currentTrack.title}
                   className="h-14 w-14 rounded object-cover"
+                  loading="lazy"
                 />
               ) : (
                 <div className="flex h-14 w-14 items-center justify-center rounded bg-gray-700">

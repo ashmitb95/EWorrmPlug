@@ -14,42 +14,41 @@ export async function GET(request: NextRequest) {
     }
 
     // Search for "Your Top Songs" playlists
-    const playlists = await searchPlaylists(accessToken, 'your top songs', 10)
+    // Increase limit to get more results (Spotify typically has playlists for multiple years)
+    const playlists = await searchPlaylists(accessToken, 'your top songs', 50)
     
     // Filter for Spotify's "Your Top Songs" playlists
-    const filteredPlaylists = playlists.filter(
+    // Match the old implementation: check name includes "your top songs" and owner is Spotify
+    const filteredTopPlaylists = playlists.filter(
       (playlist: any) =>
-        playlist.name.toLowerCase().includes('your top songs') &&
+        playlist.name.toLowerCase()?.includes('your top songs') &&
         playlist.owner.display_name === 'Spotify'
     )
 
-    // Get tracks for each playlist
-    const playlistsWithTracks = await Promise.all(
-      filteredPlaylists.map(async (playlist: any) => {
+    // Get tracks for each playlist - matching old implementation structure
+    const playlistTracks = await Promise.all(
+      filteredTopPlaylists.map(async (currentPlaylist: any) => {
+        const { id: playlistID, name } = currentPlaylist
         try {
-          const tracks = await getPlaylistTracks(accessToken, playlist.id)
+          const tracks = await getPlaylistTracks(accessToken, playlistID)
+          // Match old implementation: return { name, tracks }
+          // tracks are already mapped to track.track in getPlaylistTracks
           return {
-            id: playlist.id,
-            name: playlist.name,
+            name: name,
             tracks: tracks.filter((track: any) => track !== null),
           }
         } catch (error) {
-          console.error(`Error fetching tracks for playlist ${playlist.id}:`, error)
+          console.error(`Error fetching tracks for playlist ${playlistID}:`, error)
           return {
-            id: playlist.id,
-            name: playlist.name,
+            name: name,
             tracks: [],
           }
         }
       })
     )
 
-    // Sort by name (year)
-    const sortedPlaylists = playlistsWithTracks.sort((a: any, b: any) => 
-      a.name.localeCompare(b.name)
-    )
-
-    return NextResponse.json(sortedPlaylists)
+    // Return the playlist tracks (matching old implementation)
+    return NextResponse.json(playlistTracks)
   } catch (error: any) {
     console.error('Error fetching forgotten playlists:', error)
     return NextResponse.json(
