@@ -22,22 +22,14 @@ export function getAuthUrl(): string {
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
     : process.env.SPOTIFY_CLIENT_ID;
   
-  // Get redirect URI - prioritize env var, then use window location
-  // Preserve paths like /callback, only trim trailing slashes from domain-only URIs
+  // Get redirect URI - use env var exactly as provided, or default
   let redirectUri: string;
   if (typeof window !== 'undefined') {
     // Client-side: use env var if set, otherwise use current origin + /callback
-    const baseUri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || `${window.location.origin}/callback`;
-    // Remove trailing slash only if it's just the domain (no path)
-    redirectUri = baseUri.endsWith('/') && !baseUri.match(/\/[^\/]+\/$/) 
-      ? baseUri.slice(0, -1) 
-      : baseUri;
+    redirectUri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || `${window.location.origin}/callback`;
   } else {
     // Server-side: use env var or default to localhost/callback
-    const baseUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000/callback';
-    redirectUri = baseUri.endsWith('/') && !baseUri.match(/\/[^\/]+\/$/) 
-      ? baseUri.slice(0, -1) 
-      : baseUri;
+    redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000/callback';
   }
   
   if (!clientId) {
@@ -61,11 +53,10 @@ export function getAuthUrl(): string {
 }
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
-  const baseRedirectUri = process.env.SPOTIFY_REDIRECT_URI || 
-                          process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || 
-                          'http://localhost:3000';
-  // Remove trailing slash to ensure exact match with Spotify settings
-  const redirectUri = baseRedirectUri.replace(/\/$/, '');
+  // Use env var exactly as provided, or default to localhost/callback
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 
+                      process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || 
+                      'http://localhost:3000/callback';
   
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
