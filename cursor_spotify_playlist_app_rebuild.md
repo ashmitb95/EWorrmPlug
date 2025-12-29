@@ -96,7 +96,7 @@ Creating a modern TypeScript Next.js app structure:
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    NEXT_PUBLIC_SPOTIFY_CLIENT_ID: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
   },
@@ -289,11 +289,11 @@ export const PERMISSION_SCOPES = [
 ];
 
 export function getAuthUrl(): string {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000';
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set');
   }
 
   const params = new URLSearchParams({
@@ -308,7 +308,7 @@ export function getAuthUrl(): string {
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000',
   });
@@ -1372,7 +1372,7 @@ A modern TypeScript Next.js application for curating and discovering Spotify pla
    
    Create a `.env.local` file in the root directory:
    ```env
-   SPOTIFY_CLIENT_ID=your_spotify_client_id
+   NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_client_id
    SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
    SPOTIFY_REDIRECT_URI=http://localhost:3000
    ```
@@ -1402,7 +1402,7 @@ A modern TypeScript Next.js application for curating and discovering Spotify pla
 
 3. **Configure Environment Variables**:
    In Vercel project settings, add:
-   - `SPOTIFY_CLIENT_ID`
+   - `NEXT_PUBLIC_SPOTIFY_CLIENT_ID`
    - `SPOTIFY_CLIENT_SECRET`
    - `SPOTIFY_REDIRECT_URI` (your Vercel deployment URL, e.g., `https://your-app.vercel.app`)
 
@@ -1650,7 +1650,7 @@ const nextConfig = {
     domains: ['i.scdn.co', 'mosaic.scdn.co', 'wrapped-images.spotifycdn.com'],
   },
   env: {
-    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    NEXT_PUBLIC_SPOTIFY_CLIENT_ID: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
   },
@@ -1686,7 +1686,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI from window location or env
   const redirectUri = typeof window !== 'undefined'
@@ -1694,7 +1694,7 @@ export function getAuthUrl(): string {
     : (process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000');
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
   }
 
   const params = new URLSearchParams({
@@ -1709,7 +1709,7 @@ export function getAuthUrl(): string {
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000',
   });
@@ -1893,7 +1893,7 @@ A modern TypeScript Next.js application for curating and discovering Spotify pla
 
 3. **Configure Environment Variables**:
    In Vercel project settings, add:
-   - `SPOTIFY_CLIENT_ID`
+   - `NEXT_PUBLIC_SPOTIFY_CLIENT_ID`
    - `SPOTIFY_CLIENT_SECRET`
    - `SPOTIFY_REDIRECT_URI` (your Vercel deployment URL, e.g., `https://your-app.vercel.app`)
 
@@ -2855,7 +2855,7 @@ const nextConfig = {
     ],
   },
   env: {
-    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    NEXT_PUBLIC_SPOTIFY_CLIENT_ID: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
   },
@@ -5415,7 +5415,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI from window location or env
   const redirectUri = typeof window !== 'undefined'
@@ -5423,7 +5423,7 @@ export function getAuthUrl(): string {
     : (process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000');
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
   }
 
   const params = new URLSearchParams({
@@ -5438,7 +5438,7 @@ export function getAuthUrl(): string {
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000',
   });
@@ -5567,7 +5567,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI from window location or env
   const redirectUri = typeof window !== 'undefined'
@@ -5575,7 +5575,7 @@ export function getAuthUrl(): string {
     : (process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000');
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
   }
 
   const params = new URLSearchParams({
@@ -5590,7 +5590,7 @@ export function getAuthUrl(): string {
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000',
   });
@@ -5719,7 +5719,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI from window location or env
   const redirectUri = typeof window !== 'undefined'
@@ -5727,7 +5727,7 @@ export function getAuthUrl(): string {
     : (process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000');
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
   }
 
   const params = new URLSearchParams({
@@ -5742,7 +5742,7 @@ export function getAuthUrl(): string {
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000',
   });
@@ -5872,7 +5872,7 @@ const nextConfig = {
     ],
   },
   env: {
-    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    NEXT_PUBLIC_SPOTIFY_CLIENT_ID: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
   },
@@ -5929,7 +5929,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI - prioritize env var, then use window location
   let redirectUri: string;
@@ -5942,7 +5942,7 @@ export function getAuthUrl(): string {
   }
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
   }
 
   const params = new URLSearchParams({
@@ -5957,7 +5957,7 @@ export function getAuthUrl(): string {
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000',
   });
@@ -6086,7 +6086,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI - prioritize env var, then use window location
   let redirectUri: string;
@@ -6099,7 +6099,7 @@ export function getAuthUrl(): string {
   }
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
   }
 
   const params = new URLSearchParams({
@@ -6118,7 +6118,7 @@ export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
                      'http://localhost:3000';
   
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: redirectUri,
   });
@@ -6242,7 +6242,7 @@ const nextConfig = {
     ],
   },
   env: {
-    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    NEXT_PUBLIC_SPOTIFY_CLIENT_ID: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
     NEXT_PUBLIC_SPOTIFY_REDIRECT_URI: process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI,

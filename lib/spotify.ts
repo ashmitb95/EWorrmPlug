@@ -20,7 +20,7 @@ export function getAuthUrl(): string {
   // Client-side: use NEXT_PUBLIC_ prefix for environment variables
   const clientId = typeof window !== 'undefined' 
     ? process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID 
-    : process.env.SPOTIFY_CLIENT_ID;
+    : process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   
   // Get redirect URI - use env var exactly as provided, or default
   let redirectUri: string;
@@ -35,9 +35,9 @@ export function getAuthUrl(): string {
   if (!clientId) {
     const envHint = typeof window !== 'undefined' 
       ? 'NEXT_PUBLIC_SPOTIFY_CLIENT_ID'
-      : 'SPOTIFY_CLIENT_ID';
+      : 'NEXT_PUBLIC_SPOTIFY_CLIENT_ID';
     throw new Error(
-      `SPOTIFY_CLIENT_ID is not set. Make sure to set ${envHint} in your environment variables. ` +
+      `NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set. Make sure to set ${envHint} in your environment variables. ` +
       `For Vercel: Add it in Project Settings > Environment Variables for all environments (Production, Preview, Development).`
     );
   }
@@ -59,7 +59,7 @@ export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
                       'http://localhost:3000/callback';
   
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: redirectUri,
   });

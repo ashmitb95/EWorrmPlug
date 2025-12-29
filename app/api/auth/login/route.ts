@@ -16,10 +16,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required environment variables
-    if (!process.env.SPOTIFY_CLIENT_ID) {
-      console.error('SPOTIFY_CLIENT_ID is not set')
+    if (!process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID) {
+      console.error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set')
       return NextResponse.json(
-        { error: 'Server configuration error: SPOTIFY_CLIENT_ID is missing' },
+        { error: 'Server configuration error: NEXT_PUBLIC_SPOTIFY_CLIENT_ID is missing' },
         { status: 500 }
       )
     }
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         spotifyError: error?.body?.error,
         spotifyErrorDescription: error?.body?.error_description,
         debug: {
-          hasClientId: !!process.env.SPOTIFY_CLIENT_ID,
+          hasClientId: !!process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
           hasClientSecret: !!process.env.SPOTIFY_CLIENT_SECRET,
           redirectUri: redirectUri,
           statusCode: error?.statusCode
