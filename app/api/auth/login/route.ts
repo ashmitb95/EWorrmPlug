@@ -16,10 +16,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required environment variables
-    if (!process.env.SPOTIFY_CLIENT_ID) {
-      console.error('SPOTIFY_CLIENT_ID is not set')
+    // Check both SPOTIFY_CLIENT_ID and NEXT_PUBLIC_SPOTIFY_CLIENT_ID
+    // (NEXT_PUBLIC_* vars are available on server, but we check both for safety)
+    const clientId = process.env.SPOTIFY_CLIENT_ID || process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
+    if (!clientId) {
+      console.error('SPOTIFY_CLIENT_ID is not set (checked both SPOTIFY_CLIENT_ID and NEXT_PUBLIC_SPOTIFY_CLIENT_ID)')
       return NextResponse.json(
-        { error: 'Server configuration error: SPOTIFY_CLIENT_ID is missing' },
+        { error: 'Server configuration error: SPOTIFY_CLIENT_ID is missing. Please set either SPOTIFY_CLIENT_ID or NEXT_PUBLIC_SPOTIFY_CLIENT_ID in Vercel environment variables.' },
         { status: 500 }
       )
     }
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
         spotifyError: error?.body?.error,
         spotifyErrorDescription: error?.body?.error_description,
         debug: {
-          hasClientId: !!process.env.SPOTIFY_CLIENT_ID,
+          hasClientId: !!(process.env.SPOTIFY_CLIENT_ID || process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID),
           hasClientSecret: !!process.env.SPOTIFY_CLIENT_SECRET,
           redirectUri: redirectUri,
           statusCode: error?.statusCode

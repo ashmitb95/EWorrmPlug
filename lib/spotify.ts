@@ -58,8 +58,12 @@ export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
                       process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || 
                       'http://localhost:3000/callback';
   
+  // Use SPOTIFY_CLIENT_ID if available, otherwise fall back to NEXT_PUBLIC_SPOTIFY_CLIENT_ID
+  // (NEXT_PUBLIC_* vars are available on server, but we check both for safety)
+  const clientId = process.env.SPOTIFY_CLIENT_ID || process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
+  
   const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientId: clientId,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: redirectUri,
   });
