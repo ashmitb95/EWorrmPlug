@@ -13,6 +13,8 @@ export const PERMISSION_SCOPES = [
   'user-modify-playback-state',
   'user-read-recently-played',
   'playlist-read-private',
+  'playlist-modify-public',
+  'playlist-modify-private',
   'user-read-currently-playing',
 ];
 
@@ -111,19 +113,117 @@ export async function getArtistTopTracks(
   return response.body.tracks;
 }
 
+export interface RecommendationOptions {
+  seedTracks?: string[];
+  seedArtists?: string[];
+  seedGenres?: string[];
+  limit?: number;
+  // Audio feature targets (0.0 to 1.0)
+  targetEnergy?: number;
+  targetDanceability?: number;
+  targetValence?: number;
+  targetAcousticness?: number;
+  targetInstrumentalness?: number;
+  minEnergy?: number;
+  maxEnergy?: number;
+  minDanceability?: number;
+  maxDanceability?: number;
+}
+
 export async function getRecommendations(
   accessToken: string,
-  seedTracks: string[],
-  limit: number = 20
+  options: RecommendationOptions = {}
 ) {
   const spotifyApi = createSpotifyApi(accessToken);
-  // Limit to 5 seed tracks as per Spotify API
-  const seeds = seedTracks.slice(0, 5);
-  const response = await spotifyApi.getRecommendations({
-    seed_tracks: seeds,
-    limit,
-  });
+  
+  // Spotify API allows up to 5 total seeds (tracks + artists + genres combined)
+  const seedTracks = (options.seedTracks || []).slice(0, 5);
+  const seedArtists = (options.seedArtists || []).slice(0, 5 - seedTracks.length);
+  const seedGenres = (options.seedGenres || []).slice(0, 5 - seedTracks.length - seedArtists.length);
+  
+  // Build recommendation parameters
+  const params: any = {
+    limit: options.limit || 20,
+  };
+  
+  if (seedTracks.length > 0) {
+    params.seed_tracks = seedTracks;
+  }
+  if (seedArtists.length > 0) {
+    params.seed_artists = seedArtists;
+  }
+  if (seedGenres.length > 0) {
+    params.seed_genres = seedGenres;
+  }
+  
+  // Add audio feature targets if provided
+  if (options.targetEnergy !== undefined) params.target_energy = options.targetEnergy;
+  if (options.targetDanceability !== undefined) params.target_danceability = options.targetDanceability;
+  if (options.targetValence !== undefined) params.target_valence = options.targetValence;
+  if (options.targetAcousticness !== undefined) params.target_acousticness = options.targetAcousticness;
+  if (options.targetInstrumentalness !== undefined) params.target_instrumentalness = options.targetInstrumentalness;
+  
+  // Add min/max ranges if provided
+  if (options.minEnergy !== undefined) params.min_energy = options.minEnergy;
+  if (options.maxEnergy !== undefined) params.max_energy = options.maxEnergy;
+  if (options.minDanceability !== undefined) params.min_danceability = options.minDanceability;
+  if (options.maxDanceability !== undefined) params.max_danceability = options.maxDanceability;
+  
+  const response = await spotifyApi.getRecommendations(params);
   return response.body.tracks;
+}
+
+export async function createPlaylist(
+  accessToken: string,
+  name: string,
+  description?: string,
+  isPublic: boolean = false
+) {
+  const spotifyApi = createSpotifyApi(accessToken);
+  
+  // Get current user ID first
+  const me = await spotifyApi.getMe();
+  const userId = me.body.id;
+  
+  const response = await spotifyApi.createPlaylist(userId, {
+    name,
+    description: description || `Created by Spotify Playlist Curator`,
+    public: isPublic,
+  });
+  
+  return response.body;
+}
+
+export async function addTracksToPlaylist(
+  accessToken: string,
+  playlistId: string,
+  trackUris: string[]
+) {
+  const spotifyApi = createSpotifyApi(accessToken);
+  
+  // Spotify API allows max 100 tracks per request
+  const chunks = [];
+  for (let i = 0; i < trackUris.length; i += 100) {
+    chunks.push(trackUris.slice(i, i + 100));
+  }
+  
+  // Add tracks in chunks
+  const results = [];
+  for (const chunk of chunks) {
+    const response = await spotifyApi.addTracksToPlaylist(playlistId, chunk);
+    results.push(response.body);
+  }
+  
+  return results;
+}
+
+export async function getUserPlaylists(
+  accessToken: string,
+  limit: number = 50
+) {
+  const spotifyApi = createSpotifyApi(accessToken);
+  const response = await spotifyApi.getUserPlaylists({ limit });
+  return response.body.items;
 }
 
 export async function searchPlaylists(
