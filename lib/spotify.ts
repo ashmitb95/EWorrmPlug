@@ -23,17 +23,31 @@ export function getAuthUrl(): string {
     : process.env.SPOTIFY_CLIENT_ID;
   
   // Get redirect URI - prioritize env var, then use window location
+  // Preserve paths like /callback, only trim trailing slashes from domain-only URIs
   let redirectUri: string;
   if (typeof window !== 'undefined') {
-    // Client-side: use env var if set, otherwise use current origin
-    redirectUri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || window.location.origin;
+    // Client-side: use env var if set, otherwise use current origin + /callback
+    const baseUri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || `${window.location.origin}/callback`;
+    // Remove trailing slash only if it's just the domain (no path)
+    redirectUri = baseUri.endsWith('/') && !baseUri.match(/\/[^\/]+\/$/) 
+      ? baseUri.slice(0, -1) 
+      : baseUri;
   } else {
-    // Server-side: use env var or default to localhost
-    redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000';
+    // Server-side: use env var or default to localhost/callback
+    const baseUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3000/callback';
+    redirectUri = baseUri.endsWith('/') && !baseUri.match(/\/[^\/]+\/$/) 
+      ? baseUri.slice(0, -1) 
+      : baseUri;
   }
   
   if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID is not set. Make sure to set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your .env.local file.');
+    const envHint = typeof window !== 'undefined' 
+      ? 'NEXT_PUBLIC_SPOTIFY_CLIENT_ID'
+      : 'SPOTIFY_CLIENT_ID';
+    throw new Error(
+      `SPOTIFY_CLIENT_ID is not set. Make sure to set ${envHint} in your environment variables. ` +
+      `For Vercel: Add it in Project Settings > Environment Variables for all environments (Production, Preview, Development).`
+    );
   }
 
   const params = new URLSearchParams({
@@ -47,9 +61,11 @@ export function getAuthUrl(): string {
 }
 
 export function createSpotifyApi(accessToken?: string): SpotifyWebApi {
-  const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 
-                     process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || 
-                     'http://localhost:3000';
+  const baseRedirectUri = process.env.SPOTIFY_REDIRECT_URI || 
+                          process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || 
+                          'http://localhost:3000';
+  // Remove trailing slash to ensure exact match with Spotify settings
+  const redirectUri = baseRedirectUri.replace(/\/$/, '');
   
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
