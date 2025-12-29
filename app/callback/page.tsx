@@ -27,7 +27,21 @@ function CallbackContent() {
         },
         body: JSON.stringify({ code }),
       })
-        .then((res) => res.json())
+        .then(async (res) => {
+          const data = await res.json()
+          if (!res.ok) {
+            // Log the actual error details
+            console.error('Auth API error:', {
+              status: res.status,
+              statusText: res.statusText,
+              error: data.error,
+              details: data.details,
+              debug: data.debug
+            })
+            throw new Error(data.details || data.error || 'Authentication failed')
+          }
+          return data
+        })
         .then((data) => {
           if (data.accessToken) {
             localStorage.setItem('accessToken', data.accessToken)
